@@ -26,7 +26,7 @@ function App() {
           />
           <Route 
             path="/chat" 
-            element={companionData ? <Chat companionData={companionData} /> : <Navigate to="/onboarding" />} 
+            element={companionData ? <Chat companionData={companionData} setCompanionData={setCompanionData} /> : <Navigate to="/onboarding" />} 
           />
           <Route 
             path="/journal" 

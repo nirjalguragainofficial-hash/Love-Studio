@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Smile } from 'lucide-react';
+import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
 const INITIAL_MESSAGES = [
@@ -10,12 +11,13 @@ const INITIAL_MESSAGES = [
 
 const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'die', 'hurt myself', 'cut myself', 'end it all'];
 
-export default function Chat({ companionData }) {
+export default function Chat({ companionData, setCompanionData }) {
   const navigate = useNavigate();
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [inputValue, setInputValue] = useState('');
   const [mode, setMode] = useState('vent'); // vent, distract, cheer
   const [showCrisis, setShowCrisis] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
