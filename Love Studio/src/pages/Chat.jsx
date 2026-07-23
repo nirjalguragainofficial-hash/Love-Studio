@@ -22,6 +22,7 @@ export default function Chat({ companionData, setCompanionData }) {
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -30,6 +31,34 @@ export default function Chat({ companionData, setCompanionData }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      recognition.onresult = (event) => {
+        let text = '';
+        for (let i = 0; i < event.results.length; i++) {
+          text += event.results[i][0].transcript;
+        }
+        setInputValue(text);
+      };
+
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+      
+      recognitionRef.current = recognition;
+    }
+    
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
   const checkCrisis = (text) => {
     const lower = text.toLowerCase();
