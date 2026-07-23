@@ -60,6 +60,22 @@ export default function Chat({ companionData, setCompanionData }) {
     };
   }, []);
 
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      setInputValue(''); // clear input when starting to speak
+      try {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Speech recognition error:", e);
+        setIsListening(false);
+      }
+    }
+  };
+
   const checkCrisis = (text) => {
     const lower = text.toLowerCase();
     return CRISIS_KEYWORDS.some(kw => lower.includes(kw));
@@ -223,7 +239,8 @@ export default function Chat({ companionData, setCompanionData }) {
         />
         <button 
           className={`mic-btn ${isListening ? 'listening' : ''}`}
-          onClick={() => setIsListening(!isListening)}
+          onClick={toggleListening}
+          title={isListening ? "Stop listening" : "Start listening"}
         >
           {isListening ? <Mic size={20} /> : <MicOff size={20} />}
         </button>
