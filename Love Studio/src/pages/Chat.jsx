@@ -36,6 +36,13 @@ export default function Chat({ companionData, setCompanionData }) {
     return CRISIS_KEYWORDS.some(kw => lower.includes(kw));
   };
 
+  const speakText = (text) => {
+    if (!voiceEnabled || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const getMockAIResponse = (userText, currentMode) => {
     const text = userText.toLowerCase();
     
@@ -79,6 +86,7 @@ export default function Chat({ companionData, setCompanionData }) {
         text: getMockAIResponse(userMessage.text, mode) 
       };
       setMessages(prev => [...prev, aiResponse]);
+      speakText(aiResponse.text);
     }, 1500);
   };
 
