@@ -234,7 +234,7 @@ export default function Chat({ companionData, setCompanionData }) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyPress}
-          placeholder={`Type a message to ${companionData.name}...`}
+          placeholder={isListening ? "Listening..." : `Type a message to ${companionData.name}...`}
           rows={1}
         />
         <button 
