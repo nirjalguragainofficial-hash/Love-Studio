@@ -38,7 +38,7 @@ export default function Chat({ companionData, setCompanionData }) {
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      
+
       recognition.onresult = (event) => {
         let text = '';
         for (let i = 0; i < event.results.length; i++) {
@@ -49,10 +49,10 @@ export default function Chat({ companionData, setCompanionData }) {
 
       recognition.onerror = () => setIsListening(false);
       recognition.onend = () => setIsListening(false);
-      
+
       recognitionRef.current = recognition;
     }
-    
+
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
@@ -88,31 +88,34 @@ export default function Chat({ companionData, setCompanionData }) {
     window.speechSynthesis.speak(utterance);
   };
 
-  const getMockAIResponse = (userText, currentMode) => {
-    const text = userText.toLowerCase();
-    
-    if (currentMode === 'vent') {
-      if (text.includes('miss')) return "It's really hard to miss someone. Your feelings are completely valid. I'm here to listen as long as you need.";
-      if (text.includes('sad') || text.includes('cry')) return "It's okay to feel sad. Let it out. I'm right here with you.";
-      return "I hear you. Tell me more about that.";
-    } 
-    
-    if (currentMode === 'distract') {
-      return "Did you know that sea otters hold hands when they sleep so they don't drift apart? What's your favorite animal?";
-    }
-    
-    if (currentMode === 'cheer') {
-      return "I just want to remind you that you are incredibly strong, even if you don't feel like it right now. You're doing great.";
-    }
+  const getAIResponse = async (allMessages, currentMode) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: allMessages,
+          mode: currentMode,
+          companionName: companionData.name
+        })
+      });
 
-    return "I'm always here for you.";
+      if (!response.ok) throw new Error('Request failed');
+
+      const data = await response.json();
+      return data.reply;
+    } catch (err) {
+      console.error('AI response error:', err);
+      return "Sorry, I'm having trouble connecting right now. Please try again in a moment.";
+    }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage = { id: Date.now(), sender: 'user', text: inputValue };
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputValue('');
 
     if (checkCrisis(inputValue)) {
@@ -121,18 +124,13 @@ export default function Chat({ companionData, setCompanionData }) {
     }
 
     setIsTyping(true);
-    
-    // Simulate network delay
-    setTimeout(() => {
-      setIsTyping(false);
-      const aiResponse = { 
-        id: Date.now() + 1, 
-        sender: 'ai', 
-        text: getMockAIResponse(userMessage.text, mode) 
-      };
-      setMessages(prev => [...prev, aiResponse]);
-      speakText(aiResponse.text);
-    }, 1500);
+
+    const replyText = await getAIResponse(updatedMessages, mode);
+
+    setIsTyping(false);
+    const aiResponse = { id: Date.now() + 1, sender: 'ai', text: replyText };
+    setMessages(prev => [...prev, aiResponse]);
+    speakText(aiResponse.text);
   };
 
   const handleKeyPress = (e) => {
@@ -153,11 +151,11 @@ export default function Chat({ companionData, setCompanionData }) {
             <span className="status">Online & listening</span>
           </div>
         </div>
-        
+
         <div className="header-actions">
-          <button 
-            onClick={() => setVoiceEnabled(!voiceEnabled)} 
-            className="icon-btn" 
+          <button
+            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            className="icon-btn"
             title={voiceEnabled ? "Mute Voice" : "Enable Voice"}
           >
             {voiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
@@ -165,7 +163,7 @@ export default function Chat({ companionData, setCompanionData }) {
           <button onClick={() => navigate('/journal')} className="icon-btn" title="Journal">
             <Book size={20} />
           </button>
-          <button className="icon-btn" title="Settings">
+          <button className="icon-btn" title="Settings" onClick={() => setShowSettings(true)}>
             <Settings size={20} />
           </button>
         </div>
@@ -173,19 +171,19 @@ export default function Chat({ companionData, setCompanionData }) {
 
       {/* Mode Selector */}
       <div className="mode-selector">
-        <button 
+        <button
           className={`mode-btn ${mode === 'vent' ? 'active' : ''}`}
           onClick={() => setMode('vent')}
         >
           <Heart size={16} /> Just Listen
         </button>
-        <button 
+        <button
           className={`mode-btn ${mode === 'distract' ? 'active' : ''}`}
           onClick={() => setMode('distract')}
         >
           <Coffee size={16} /> Distract Me
         </button>
-        <button 
+        <button
           className={`mode-btn ${mode === 'cheer' ? 'active' : ''}`}
           onClick={() => setMode('cheer')}
         >
@@ -237,15 +235,15 @@ export default function Chat({ companionData, setCompanionData }) {
           placeholder={isListening ? "Listening..." : `Type a message to ${companionData.name}...`}
           rows={1}
         />
-        <button 
+        <button
           className={`mic-btn ${isListening ? 'listening' : ''}`}
           onClick={toggleListening}
           title={isListening ? "Stop listening" : "Start listening"}
         >
           {isListening ? <Mic size={20} /> : <MicOff size={20} />}
         </button>
-        <button 
-          className="send-btn" 
+        <button
+          className="send-btn"
           onClick={handleSend}
           disabled={!inputValue.trim() || isTyping}
         >
@@ -256,7 +254,7 @@ export default function Chat({ companionData, setCompanionData }) {
       {/* Crisis Modal */}
       <AnimatePresence>
         {showCrisis && (
-          <motion.div 
+          <motion.div
             className="modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -266,7 +264,7 @@ export default function Chat({ companionData, setCompanionData }) {
               <ShieldAlert size={48} color="var(--color-error)" className="modal-icon" />
               <h2>You are not alone.</h2>
               <p>It sounds like you're going through a really painful moment right now. Your safety and well-being are so important.</p>
-              
+
               <div className="crisis-resources">
                 <div className="resource-item">
                   <strong>National Suicide Prevention Lifeline</strong>
@@ -277,14 +275,26 @@ export default function Chat({ companionData, setCompanionData }) {
                   <p>Text HOME to 741741</p>
                 </div>
               </div>
-              
+
               <p className="modal-note">Please consider reaching out to a professional or a loved one. AI is here to chat, but it cannot replace real human support.</p>
-              
+
               <button className="btn-primary" onClick={() => setShowCrisis(false)}>
                 I understand, close
               </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Settings Modal */}
+      <AnimatePresence>
+        {showSettings && (
+          <SettingsModal
+            companionData={companionData}
+            onSave={(updated) => setCompanionData(updated)}
+            onReset={() => setCompanionData({ name: '', face: '/avatars/female.png', voice: 'calm' })}
+            onClose={() => setShowSettings(false)}
+          />
         )}
       </AnimatePresence>
     </div>
