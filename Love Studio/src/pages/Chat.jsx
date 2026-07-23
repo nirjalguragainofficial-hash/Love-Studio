@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX } from 'lucide-react';
+import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX, Mic, MicOff } from 'lucide-react';
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
@@ -20,6 +20,7 @@ export default function Chat({ companionData, setCompanionData }) {
   const [showSettings, setShowSettings] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -183,6 +184,12 @@ export default function Chat({ companionData, setCompanionData }) {
           placeholder={`Type a message to ${companionData.name}...`}
           rows={1}
         />
+        <button 
+          className={`mic-btn ${isListening ? 'listening' : ''}`}
+          onClick={() => setIsListening(!isListening)}
+        >
+          {isListening ? <Mic size={20} /> : <MicOff size={20} />}
+        </button>
         <button 
           className="send-btn" 
           onClick={handleSend}
