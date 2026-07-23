@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Smile } from 'lucide-react';
+import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX } from 'lucide-react';
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
@@ -19,6 +19,7 @@ export default function Chat({ companionData, setCompanionData }) {
   const [showCrisis, setShowCrisis] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -100,6 +101,13 @@ export default function Chat({ companionData, setCompanionData }) {
         </div>
         
         <div className="header-actions">
+          <button 
+            onClick={() => setVoiceEnabled(!voiceEnabled)} 
+            className="icon-btn" 
+            title={voiceEnabled ? "Mute Voice" : "Enable Voice"}
+          >
+            {voiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          </button>
           <button onClick={() => navigate('/journal')} className="icon-btn" title="Journal">
             <Book size={20} />
           </button>
