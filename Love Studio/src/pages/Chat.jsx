@@ -9,7 +9,12 @@ const INITIAL_MESSAGES = [
   { id: 1, sender: 'ai', text: "Hi there. I'm here for you. How are you feeling today?" }
 ];
 
-const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'die', 'hurt myself', 'cut myself', 'end it all'];
+// Trigger words that show the crisis resources modal
+const CRISIS_KEYWORDS = [
+  'suicide', 'kill myself', 'die', 'hurt myself', 'cut myself', 'end it all',
+  'want to die', 'no reason to live', 'end my life', 'not worth living',
+  'self harm', 'overdose', 'give up on life'
+];
 
 export default function Chat({ companionData, setCompanionData }) {
   const navigate = useNavigate();
