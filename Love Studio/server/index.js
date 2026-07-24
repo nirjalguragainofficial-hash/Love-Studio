@@ -1,3 +1,7 @@
+/**
+ * Love Studio — Express API Server
+ * Handles AI chat completions via the Groq API.
+ */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -13,12 +17,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Load Groq API key from environment
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 app.post('/api/chat', async (req, res) => {
     try {
         const { messages, mode, companionName } = req.body;
 
+        // Behaviour instructions vary depending on the mode selected by the user
         const modeInstructions = {
             vent: "Be warm, empathetic, and a great listener. Validate feelings, ask gentle follow-up questions. Don't rush to give advice unless asked.",
             distract: "Be light, fun, and distracting. Share interesting facts, ask playful questions, keep things upbeat.",
