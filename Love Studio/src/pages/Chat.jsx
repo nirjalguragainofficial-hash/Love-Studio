@@ -5,8 +5,9 @@ import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
+// First message shown when a user opens the chat
 const INITIAL_MESSAGES = [
-  { id: 1, sender: 'ai', text: "Hi there. I'm here for you. How are you feeling today?" }
+  { id: 1, sender: 'ai', text: "Hey, I'm so glad you're here 💜 This is your safe space. How are you feeling today?" }
 ];
 
 // Trigger words that show the crisis resources modal
