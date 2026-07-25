@@ -71,6 +71,12 @@ export default function Journal({ companionData }) {
               value={currentEntry}
               onChange={(e) => setCurrentEntry(e.target.value)}
             />
+            {/* Live word/character count */}
+            <div className="entry-count">
+              {currentEntry.trim() ? currentEntry.trim().split(/\s+/).length : 0} words
+              &nbsp;&middot;&nbsp;
+              {currentEntry.length} chars
+            </div>
             <div className="editor-actions">
               <button className="btn-secondary" onClick={() => setIsWriting(false)}>Cancel</button>
               <button className="btn-primary" onClick={handleSave} disabled={!currentEntry.trim()}>Save Entry</button>
