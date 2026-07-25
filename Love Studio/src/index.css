@@ -30,6 +30,34 @@
   --shadow-lg: 0 8px 32px rgba(181, 131, 141, 0.16);
 }
 
+/* Dark mode — automatically applied when the OS is in dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1a1218;
+    --color-surface: #251e22;
+    --color-surface-hover: #2e2428;
+    --color-primary: #ffb4a2;
+    --color-primary-light: #cc8070;
+    --color-primary-dark: #e59882;
+    --color-secondary: #c4686b;
+    --color-accent: #9b6370;
+    --color-text: #f0e8e4;
+    --color-text-muted: #a89590;
+    --color-border: #3a2d30;
+
+    --color-chat-user: #3d2820;
+    --color-chat-ai: #2a2026;
+
+    --color-error: #ff758f;
+    --color-success: #7ab3aa;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+
 * {
   box-sizing: border-box;
   margin: 0;
