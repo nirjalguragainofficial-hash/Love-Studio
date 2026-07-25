@@ -5,6 +5,18 @@ import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
+// Quick-access mood emoji snippets shown above the input box
+const MOOD_EMOJIS = [
+  { emoji: '😢', label: 'sad' },
+  { emoji: '😰', label: 'anxious' },
+  { emoji: '😤', label: 'angry' },
+  { emoji: '😔', label: 'lonely' },
+  { emoji: '😊', label: 'happy' },
+  { emoji: '😴', label: 'tired' },
+  { emoji: '🤯', label: 'overwhelmed' },
+  { emoji: '💜', label: 'grateful' },
+];
+
 // First message shown when a user opens the chat
 const INITIAL_MESSAGES = [
   { id: 1, sender: 'ai', text: "Hey, I'm so glad you're here 💜 This is your safe space. How are you feeling today?" }
@@ -230,6 +242,20 @@ export default function Chat({ companionData, setCompanionData }) {
           )}
         </AnimatePresence>
         <div ref={messagesEndRef} />
+      </div>
+
+      {/* Mood Emoji Quick-Inserts */}
+      <div className="mood-emojis">
+        {MOOD_EMOJIS.map(({ emoji, label }) => (
+          <button
+            key={label}
+            className="mood-emoji-btn"
+            title={label}
+            onClick={() => setInputValue(prev => prev ? `${prev} ${emoji}` : `I'm feeling ${label} ${emoji}`)}
+          >
+            {emoji}
+          </button>
+        ))}
       </div>
 
       {/* Input Area */}

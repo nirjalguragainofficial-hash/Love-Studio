@@ -332,6 +332,36 @@
   font-style: italic;
 }
 
+.mood-emojis {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mood-emojis::-webkit-scrollbar {
+  display: none;
+}
+
+.mood-emoji-btn {
+  font-size: 1.3rem;
+  padding: 6px 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.mood-emoji-btn:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  transform: scale(1.15);
+}
+
 @media (max-width: 600px) {
   .chat-header {
     margin: 8px;
