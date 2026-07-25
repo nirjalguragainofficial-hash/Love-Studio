@@ -85,6 +85,9 @@ export default function Chat({ companionData, setCompanionData }) {
     } else {
       setInputValue(''); // clear input when starting to speak
       try {
+        // Abort any previous session before starting a new one to avoid
+        // "InvalidStateError: recognition has already started" errors
+        recognitionRef.current?.abort();
         recognitionRef.current?.start();
         setIsListening(true);
       } catch (e) {
