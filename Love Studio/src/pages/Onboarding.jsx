@@ -36,6 +36,7 @@ export default function Onboarding({ setCompanionData }) {
       exit={{ opacity: 0, y: -20 }}
       className="onboarding-step"
     >
+      <p className="step-indicator">Step 1 of 2</p>
       <Heart size={48} color="var(--color-primary)" className="step-icon" />
       <h2>Welcome to Love Studio</h2>
       <p className="step-subtitle">A little company, on the days you need it most.</p>
@@ -77,6 +78,7 @@ export default function Onboarding({ setCompanionData }) {
       exit={{ opacity: 0, y: -20 }}
       className="onboarding-step"
     >
+      <p className="step-indicator">Step 2 of 2</p>
       <Sparkles size={48} color="var(--color-secondary)" className="step-icon" />
       <h2>Create Your Companion</h2>
       <p className="step-subtitle">Who would you like to talk to?</p>
@@ -122,9 +124,16 @@ export default function Onboarding({ setCompanionData }) {
           type="text" 
           className="name-input"
           placeholder="e.g. Sam, Robin, Avery..."
+          maxLength={20}
           value={formData.name}
-          onChange={(e) => updateForm('name', e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val.length <= 20) {
+              updateForm('name', val);
+            }
+          }}
         />
+        <p className="name-char-count">{formData.name.length} / 20</p>
       </div>
 
       <div className="step-actions">

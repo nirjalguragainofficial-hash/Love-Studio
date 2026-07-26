@@ -178,6 +178,41 @@
   box-shadow: 0 0 0 3px rgba(255, 180, 162, 0.2);
 }
 
+.name-char-count {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: right;
+  margin-top: 6px;
+}
+
+.step-indicator {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+/* Progress bar at top of the onboarding card */
+.onboarding-progress {
+  width: 100%;
+  max-width: 600px;
+  height: 4px;
+  background-color: var(--color-border);
+  border-radius: 2px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
 .step-actions {
   display: flex;
   justify-content: space-between;
