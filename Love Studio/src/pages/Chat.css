@@ -362,6 +362,63 @@
   transform: scale(1.15);
 }
 
+/* Message timestamp */
+.msg-timestamp {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
+/* Emoji Reactions */
+.msg-reactions {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 1rem;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.message-bubble.ai:hover .reaction-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reaction-btn.active {
+  opacity: 1;
+  transform: scale(1);
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.reaction-btn:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.reaction-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
 @media (max-width: 600px) {
   .chat-header {
     margin: 8px;

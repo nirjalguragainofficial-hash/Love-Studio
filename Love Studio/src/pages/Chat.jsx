@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX, Mic, MicOff } from 'lucide-react';
+import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX, Mic, MicOff, Trash2 } from 'lucide-react';
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
@@ -29,9 +29,12 @@ const CRISIS_KEYWORDS = [
   'self harm', 'overdose', 'give up on life'
 ];
 
+// Reactions available on AI messages
+const MESSAGE_REACTIONS = ['❤️', '👍', '✨'];
+
 export default function Chat({ companionData, setCompanionData }) {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState(INITIAL_MESSAGES.map(m => ({...m, timestamp: new Date().toLocaleTimeString(), reaction: null})));
   const [inputValue, setInputValue] = useState('');
   const [mode, setMode] = useState('vent'); // vent, distract, cheer
   const [showCrisis, setShowCrisis] = useState(false);
@@ -41,6 +44,18 @@ export default function Chat({ companionData, setCompanionData }) {
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
+
+  const handleReaction = (msgId, emoji) => {
+    setMessages(prev => prev.map(m =>
+      m.id === msgId ? { ...m, reaction: m.reaction === emoji ? null : emoji } : m
+    ));
+  };
+
+  const handleClearChat = () => {
+    if (window.confirm('Clear all messages and start fresh?')) {
+      setMessages(INITIAL_MESSAGES.map(m => ({ ...m, timestamp: new Date().toLocaleTimeString(), reaction: null })));
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,7 +149,7 @@ export default function Chat({ companionData, setCompanionData }) {
   const handleSend = async () => {
     if (!inputValue.trim()) return;
 
-    const userMessage = { id: Date.now(), sender: 'user', text: inputValue };
+    const userMessage = { id: Date.now(), sender: 'user', text: inputValue, timestamp: new Date().toLocaleTimeString(), reaction: null };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInputValue('');
@@ -149,7 +164,7 @@ export default function Chat({ companionData, setCompanionData }) {
     const replyText = await getAIResponse(updatedMessages, mode);
 
     setIsTyping(false);
-    const aiResponse = { id: Date.now() + 1, sender: 'ai', text: replyText };
+    const aiResponse = { id: Date.now() + 1, sender: 'ai', text: replyText, timestamp: new Date().toLocaleTimeString(), reaction: null };
     setMessages(prev => [...prev, aiResponse]);
     speakText(aiResponse.text);
   };
@@ -183,6 +198,9 @@ export default function Chat({ companionData, setCompanionData }) {
           </button>
           <button onClick={() => navigate('/journal')} className="icon-btn" title="Journal">
             <Book size={20} />
+          </button>
+          <button className="icon-btn" title="Clear Chat" onClick={handleClearChat}>
+            <Trash2 size={20} />
           </button>
           <button className="icon-btn" title="Settings" onClick={() => setShowSettings(true)}>
             <Settings size={20} />
@@ -227,6 +245,22 @@ export default function Chat({ companionData, setCompanionData }) {
               )}
               <div className={`message-bubble ${msg.sender}`}>
                 {msg.text}
+                <span className="msg-timestamp">{msg.timestamp}</span>
+                {msg.sender === 'ai' && (
+                  <div className="msg-reactions">
+                    {MESSAGE_REACTIONS.map(emoji => (
+                      <button
+                        key={emoji}
+                        className={`reaction-btn ${msg.reaction === emoji ? 'active' : ''}`}
+                        onClick={() => handleReaction(msg.id, emoji)}
+                        title={`React with ${emoji}`}
+                      >
+                        {emoji}
+                        {msg.reaction === emoji && <span className="reaction-badge">1</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}

@@ -142,6 +142,11 @@ export default function Onboarding({ setCompanionData }) {
 
   return (
     <div className="onboarding-container">
+      {/* Progress Bar */}
+      <div className="onboarding-progress">
+        <div className="progress-bar" style={{ width: `${(step / 2) * 100}%` }} />
+      </div>
+      
       <div className="glass-panel onboarding-card">
         <AnimatePresence mode="wait">
           {step === 1 && renderStep1()}
