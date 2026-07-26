@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, BookHeart, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, BookHeart, Trash2, Tag } from 'lucide-react';
 import './Journal.css';
+
+// Mood tags available for each journal entry
+const MOOD_TAGS = [
+  { id: 'good', emoji: '😊', label: 'Good' },
+  { id: 'low', emoji: '😔', label: 'Low' },
+  { id: 'anxious', emoji: '😰', label: 'Anxious' },
+  { id: 'frustrated', emoji: '😤', label: 'Frustrated' },
+  { id: 'grateful', emoji: '🥰', label: 'Grateful' },
+];
 
 export default function Journal({ companionData }) {
   const navigate = useNavigate();
@@ -12,6 +21,7 @@ export default function Journal({ companionData }) {
   });
   const [isWriting, setIsWriting] = useState(false);
   const [currentEntry, setCurrentEntry] = useState('');
+  const [selectedMood, setSelectedMood] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('loveStudio_journal', JSON.stringify(entries));
@@ -22,6 +32,7 @@ export default function Journal({ companionData }) {
     const newEntry = {
       id: Date.now(),
       text: currentEntry,
+      mood: selectedMood,
       date: new Date().toLocaleDateString('en-US', { 
         weekday: 'long', 
         month: 'short', 
@@ -32,6 +43,7 @@ export default function Journal({ companionData }) {
     };
     setEntries([newEntry, ...entries]);
     setCurrentEntry('');
+    setSelectedMood(null);
     setIsWriting(false);
   };
 
@@ -77,6 +89,22 @@ export default function Journal({ companionData }) {
               &nbsp;&middot;&nbsp;
               {currentEntry.length} chars
             </div>
+            {/* Mood tag selector */}
+            <div className="mood-tag-selector">
+              <span className="mood-tag-label"><Tag size={13} /> How are you feeling?</span>
+              <div className="mood-tag-options">
+                {MOOD_TAGS.map(tag => (
+                  <button
+                    key={tag.id}
+                    className={`mood-tag-btn ${selectedMood?.id === tag.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedMood(selectedMood?.id === tag.id ? null : tag)}
+                    type="button"
+                  >
+                    {tag.emoji} {tag.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="editor-actions">
               <button className="btn-secondary" onClick={() => setIsWriting(false)}>Cancel</button>
               <button className="btn-primary" onClick={handleSave} disabled={!currentEntry.trim()}>Save Entry</button>
@@ -97,9 +125,14 @@ export default function Journal({ companionData }) {
               >
                 <div className="entry-header">
                   <span className="entry-date">{entry.date}</span>
-                  <button className="delete-btn" onClick={() => handleDelete(entry.id)}>
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="entry-header-right">
+                    {entry.mood && (
+                      <span className="entry-mood-badge">{entry.mood.emoji} {entry.mood.label}</span>
+                    )}
+                    <button className="delete-btn" onClick={() => handleDelete(entry.id)}>
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
                 <p className="entry-text">{entry.text}</p>
               </motion.div>
