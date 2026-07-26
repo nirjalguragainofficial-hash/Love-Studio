@@ -17,10 +17,47 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── Request Logger ──────────────────────────────────────────────
+app.use((req, _res, next) => {
+    const start = Date.now();
+    _res.on('finish', () => {
+        const ms = Date.now() - start;
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} → ${_res.statusCode} (${ms}ms)`);
+    });
+    next();
+});
+
+// ── Simple In-Memory Rate Limiter (10 req / IP / min) ───────────
+const rateLimitMap = new Map();
+const RATE_LIMIT = 10;
+const WINDOW_MS = 60_000;
+
+function rateLimit(req, res, next) {
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const now = Date.now();
+    const record = rateLimitMap.get(ip) || { count: 0, resetAt: now + WINDOW_MS };
+
+    if (now > record.resetAt) {
+        record.count = 0;
+        record.resetAt = now + WINDOW_MS;
+    }
+
+    record.count += 1;
+    rateLimitMap.set(ip, record);
+
+    if (record.count > RATE_LIMIT) {
+        const retryAfter = Math.ceil((record.resetAt - now) / 1000);
+        res.set('Retry-After', String(retryAfter));
+        return res.status(429).json({ error: 'Too many requests — please wait a moment.' });
+    }
+
+    next();
+}
+
 // Load Groq API key from environment
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', rateLimit, async (req, res) => {
     try {
         const { messages, mode, companionName } = req.body;
 
@@ -70,5 +107,10 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
+// Health check endpoint
+app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
