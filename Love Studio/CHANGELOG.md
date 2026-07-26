@@ -12,6 +12,13 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - Mood emoji quick-insert buttons above the chat input for faster emotional expression
 - Live word and character count inside the journal editor
 - Automatic dark mode support via `prefers-color-scheme` CSS media query
+- **Emoji reactions** on AI chat messages (❤️ 👍 ✨) — hover a bubble to react
+- **Clear Chat** button in the chat header to start a fresh conversation
+- **Mood tag categories** for journal entries (Good, Low, Anxious, Frustrated, Grateful) — displayed as a badge on saved entries
+- **In-memory rate limiter** on the API server (10 req / IP / min) with `Retry-After` header
+- **Request logger** middleware on the server for structured latency logging
+- **Health check** endpoint (`GET /api/health`) returning server status and uptime
+- **Step indicators** ("Step 1 of 2" / "Step 2 of 2") and character counter on the onboarding flow
 
 ### Fixed
 - Speech recognition `InvalidStateError` caused by starting a session while one was still active; resolved by calling `.abort()` before `.start()`
