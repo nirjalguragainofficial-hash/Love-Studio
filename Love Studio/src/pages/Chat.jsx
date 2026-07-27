@@ -142,7 +142,8 @@ export default function Chat({ companionData, setCompanionData }) {
         body: JSON.stringify({
           messages: allMessages,
           mode: currentMode,
-          companionName: companionData.name
+          companionName: companionData.name,
+          userMood: companionData.mood
         })
       });
 

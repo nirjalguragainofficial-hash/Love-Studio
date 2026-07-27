@@ -16,6 +16,17 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
   const [face, setFace] = useState(companionData?.face || '/avatars/female.png');
   const [voice, setVoice] = useState(companionData?.voice || 'calm');
 
+  // Track whether the user has made any unsaved changes
+  const isDirty =
+    name !== (companionData?.name || '') ||
+    face !== (companionData?.face || '/avatars/female.png') ||
+    voice !== (companionData?.voice || 'calm');
+
+  const handleClose = () => {
+    if (isDirty && !window.confirm('You have unsaved changes. Close anyway?')) return;
+    onClose();
+  };
+
   const handleSave = () => {
     onSave({
       ...companionData,
@@ -39,7 +50,7 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
             <Settings size={20} color="var(--color-primary, #ec4899)" />
             <h3>Companion Settings</h3>
           </div>
-          <button className="close-btn" onClick={onClose}>
+          <button className="close-btn" onClick={handleClose}>
             <X size={20} />
           </button>
         </div>
