@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, BookHeart, Trash2, Tag } from 'lucide-react';
+import { ArrowLeft, Plus, BookHeart, Trash2, Tag, Download } from 'lucide-react';
 import './Journal.css';
 
 // Mood tags available for each journal entry
@@ -51,6 +51,22 @@ export default function Journal({ companionData }) {
     setEntries(entries.filter(e => e.id !== id));
   };
 
+  const handleExport = () => {
+    if (entries.length === 0) return;
+    const lines = entries.map(e => [
+      `── ${e.date}${e.mood ? ` [${e.mood.emoji} ${e.mood.label}]` : ''} ──`,
+      e.text,
+      ''
+    ].join('\n')).join('\n');
+    const blob = new Blob([`Love Studio Journal\n${'='.repeat(40)}\n\n${lines}`], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `love-studio-journal-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="journal-container">
       <header className="journal-header">
@@ -58,7 +74,14 @@ export default function Journal({ companionData }) {
           <ArrowLeft size={24} />
         </button>
         <h2>Your Private Space</h2>
-        <div style={{ width: 40 }} /> {/* Spacer for flex balance */}
+        <button
+          className="icon-btn"
+          title="Export journal as .txt"
+          onClick={handleExport}
+          disabled={entries.length === 0}
+        >
+          <Download size={22} />
+        </button>
       </header>
 
       <div className="journal-content">
