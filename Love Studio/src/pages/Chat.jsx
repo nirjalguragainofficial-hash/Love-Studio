@@ -5,6 +5,9 @@ import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
+// Maximum characters allowed in a single chat message
+const MAX_INPUT_LENGTH = 500;
+
 // Quick-access mood emoji snippets shown above the input box
 const MOOD_EMOJIS = [
   { emoji: '😢', label: 'sad' },
@@ -299,7 +302,11 @@ export default function Chat({ companionData, setCompanionData }) {
       <div className="input-area glass-panel">
         <textarea
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= MAX_INPUT_LENGTH) {
+              setInputValue(e.target.value);
+            }
+          }}
           onKeyDown={handleKeyPress}
           placeholder={isListening ? "Listening..." : `Type a message to ${companionData.name}...`}
           rows={1}
@@ -319,6 +326,15 @@ export default function Chat({ companionData, setCompanionData }) {
           <Send size={20} />
         </button>
       </div>
+      {/* Input hint bar — visible only when typing */}
+      {inputValue.length > 0 && (
+        <div className="input-hint-bar">
+          <span className={inputValue.length >= MAX_INPUT_LENGTH * 0.9 ? 'char-count warn' : 'char-count'}>
+            {inputValue.length} / {MAX_INPUT_LENGTH}
+          </span>
+          <span className="kbd-hint">↵ Enter to send &nbsp;·&nbsp; Shift+↵ new line</span>
+        </div>
+      )}
 
       {/* Crisis Modal */}
       <AnimatePresence>
