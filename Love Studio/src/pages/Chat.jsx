@@ -38,7 +38,7 @@ const MESSAGE_REACTIONS = ['❤️', '👍', '✨'];
 export default function Chat({ companionData, setCompanionData }) {
   const navigate = useNavigate();
   const [messages, setMessages] = useState(INITIAL_MESSAGES.map(m => ({...m, timestamp: new Date().toLocaleTimeString(), reaction: null})));
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(() => localStorage.getItem('loveStudio_draft') || '');
   const [mode, setMode] = useState('vent'); // vent, distract, cheer
   const [showCrisis, setShowCrisis] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -57,8 +57,15 @@ export default function Chat({ companionData, setCompanionData }) {
   const handleClearChat = () => {
     if (window.confirm('Clear all messages and start fresh?')) {
       setMessages(INITIAL_MESSAGES.map(m => ({ ...m, timestamp: new Date().toLocaleTimeString(), reaction: null })));
+      setInputValue('');
+      localStorage.removeItem('loveStudio_draft');
     }
   };
+
+  // Persist unsent draft to localStorage
+  useEffect(() => {
+    localStorage.setItem('loveStudio_draft', inputValue);
+  }, [inputValue]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -156,6 +163,7 @@ export default function Chat({ companionData, setCompanionData }) {
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInputValue('');
+    localStorage.removeItem('loveStudio_draft');
 
     if (checkCrisis(inputValue)) {
       setShowCrisis(true);
