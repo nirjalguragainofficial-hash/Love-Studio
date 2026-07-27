@@ -59,7 +59,12 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 app.post('/api/chat', rateLimit, async (req, res) => {
     try {
-        const { messages, mode, companionName } = req.body;
+        const { messages, mode, companionName, userMood } = req.body;
+
+        // Basic input validation
+        if (!Array.isArray(messages) || messages.length === 0) {
+            return res.status(400).json({ error: 'messages must be a non-empty array.' });
+        }
 
         // Behaviour instructions vary depending on the mode selected by the user
         const modeInstructions = {
@@ -68,7 +73,17 @@ app.post('/api/chat', rateLimit, async (req, res) => {
             cheer: "Be uplifting and encouraging. Remind the user of their strengths, be genuinely warm and supportive."
         };
 
-        const systemPrompt = `You are ${companionName || 'a caring companion'}, a warm, emotionally supportive AI friend. ${modeInstructions[mode] || modeInstructions.vent} Keep responses natural and conversational, usually 1-4 sentences unless the user clearly wants to talk more in depth. Never claim to be a licensed therapist. If the user seems in crisis, gently encourage professional help.`;
+        // Extra context based on the user's onboarding mood selection
+        const moodContext = {
+            breakup:        'The user is going through a breakup — be especially gentle and avoid minimising their feelings.',
+            missing_friend:  'The user is missing a friend — acknowledge that longing and help them feel less alone.',
+            feeling_low:    'The user is feeling low today without a specific reason — offer quiet, steady companionship.',
+            just_chat:      'The user just wants casual, friendly conversation — keep things light and easy-going.'
+        };
+
+        const moodNote = moodContext[userMood] ? ` Context: ${moodContext[userMood]}` : '';
+
+        const systemPrompt = `You are ${companionName || 'a caring companion'}, a warm, emotionally supportive AI friend.${moodNote} ${modeInstructions[mode] || modeInstructions.vent} Keep responses natural and conversational, usually 1-4 sentences unless the user clearly wants to talk more in depth. Never claim to be a licensed therapist. If the user seems in crisis, gently encourage professional help.`;
 
         const groqMessages = [
             { role: 'system', content: systemPrompt },
