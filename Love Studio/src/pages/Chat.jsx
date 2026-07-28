@@ -196,7 +196,14 @@ export default function Chat({ companionData, setCompanionData }) {
           <img src={companionData.face} alt={companionData.name} className="header-avatar" />
           <div className="header-text">
             <h2>{companionData.name}</h2>
-            <span className="status">Online & listening</span>
+            <span className="status">
+              Online & listening
+              {messages.length > 1 && (
+                <span className="msg-count-badge" title="Messages in this session">
+                  {messages.length}
+                </span>
+              )}
+            </span>
           </div>
         </div>
 
