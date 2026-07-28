@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, BookHeart, Trash2, Tag, Download } from 'lucide-react';
+import { ArrowLeft, Plus, BookHeart, Trash2, Tag, Download, Search } from 'lucide-react';
 import './Journal.css';
 
 // Mood tags available for each journal entry
@@ -22,6 +22,7 @@ export default function Journal({ companionData }) {
   const [isWriting, setIsWriting] = useState(false);
   const [currentEntry, setCurrentEntry] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     localStorage.setItem('loveStudio_journal', JSON.stringify(entries));
@@ -66,6 +67,16 @@ export default function Journal({ companionData }) {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  // Filter entries by search query (text or mood label)
+  const filteredEntries = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return entries;
+    return entries.filter(e =>
+      e.text.toLowerCase().includes(q) ||
+      (e.mood?.label?.toLowerCase().includes(q))
+    );
+  }, [entries, searchQuery]);
 
   return (
     <div className="journal-container">
@@ -135,9 +146,28 @@ export default function Journal({ companionData }) {
           </motion.div>
         )}
 
+        {/* Search bar — only shown when there are entries */}
+        {entries.length > 0 && (
+          <div className="journal-search-bar">
+            <Search size={16} className="journal-search-icon" />
+            <input
+              type="text"
+              placeholder="Search entries…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="journal-search-input"
+            />
+            {searchQuery && (
+              <span className="journal-search-count">
+                {filteredEntries.length} / {entries.length}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="entries-list">
           <AnimatePresence>
-            {entries.map(entry => (
+            {filteredEntries.map(entry => (
               <motion.div 
                 key={entry.id}
                 className="entry-card"
@@ -164,6 +194,11 @@ export default function Journal({ companionData }) {
           {entries.length === 0 && !isWriting && (
             <div className="empty-state">
               <p>Your journal is empty.</p>
+            </div>
+          )}
+          {entries.length > 0 && filteredEntries.length === 0 && (
+            <div className="empty-state">
+              <p>No entries match your search.</p>
             </div>
           )}
         </div>
