@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX, Mic, MicOff, Trash2 } from 'lucide-react';
+import { Send, Settings, Book, Coffee, ShieldAlert, Heart, Sun, Volume2, VolumeX, Mic, MicOff, Trash2, Bookmark } from 'lucide-react';
 import SettingsModal from '../components/SettingsModal';
 import './Chat.css';
 
@@ -37,7 +37,7 @@ const MESSAGE_REACTIONS = ['❤️', '👍', '✨'];
 
 export default function Chat({ companionData, setCompanionData }) {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState(INITIAL_MESSAGES.map(m => ({...m, timestamp: new Date().toLocaleTimeString(), reaction: null})));
+  const [messages, setMessages] = useState(INITIAL_MESSAGES.map(m => ({...m, timestamp: new Date().toLocaleTimeString(), reaction: null, pinned: false})));
   const [inputValue, setInputValue] = useState(() => localStorage.getItem('loveStudio_draft') || '');
   const [mode, setMode] = useState('vent'); // vent, distract, cheer
   const [showCrisis, setShowCrisis] = useState(false);
@@ -56,10 +56,17 @@ export default function Chat({ companionData, setCompanionData }) {
 
   const handleClearChat = () => {
     if (window.confirm('Clear all messages and start fresh?')) {
-      setMessages(INITIAL_MESSAGES.map(m => ({ ...m, timestamp: new Date().toLocaleTimeString(), reaction: null })));
+      setMessages(INITIAL_MESSAGES.map(m => ({ ...m, timestamp: new Date().toLocaleTimeString(), reaction: null, pinned: false })));
       setInputValue('');
       localStorage.removeItem('loveStudio_draft');
     }
+  };
+
+  // Toggle pinned/bookmarked state on any message
+  const handlePin = (msgId) => {
+    setMessages(prev => prev.map(m =>
+      m.id === msgId ? { ...m, pinned: !m.pinned } : m
+    ));
   };
 
   // Persist unsent draft to localStorage
@@ -160,7 +167,7 @@ export default function Chat({ companionData, setCompanionData }) {
   const handleSend = async () => {
     if (!inputValue.trim()) return;
 
-    const userMessage = { id: Date.now(), sender: 'user', text: inputValue, timestamp: new Date().toLocaleTimeString(), reaction: null };
+    const userMessage = { id: Date.now(), sender: 'user', text: inputValue, timestamp: new Date().toLocaleTimeString(), reaction: null, pinned: false };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInputValue('');
@@ -176,7 +183,7 @@ export default function Chat({ companionData, setCompanionData }) {
     const replyText = await getAIResponse(updatedMessages, mode);
 
     setIsTyping(false);
-    const aiResponse = { id: Date.now() + 1, sender: 'ai', text: replyText, timestamp: new Date().toLocaleTimeString(), reaction: null };
+    const aiResponse = { id: Date.now() + 1, sender: 'ai', text: replyText, timestamp: new Date().toLocaleTimeString(), reaction: null, pinned: false };
     setMessages(prev => [...prev, aiResponse]);
     speakText(aiResponse.text);
   };
@@ -249,6 +256,21 @@ export default function Chat({ companionData, setCompanionData }) {
         </button>
       </div>
 
+      {/* Pinned messages strip */}
+      {messages.some(m => m.pinned) && (
+        <div className="pinned-strip">
+          <Bookmark size={13} className="pinned-strip-icon" />
+          <span className="pinned-strip-label">Pinned:</span>
+          <div className="pinned-strip-items">
+            {messages.filter(m => m.pinned).map(m => (
+              <span key={m.id} className="pinned-strip-item" title={m.text}>
+                {m.text.length > 60 ? m.text.slice(0, 60) + '…' : m.text}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Chat Area */}
       <div className="messages-area">
         <AnimatePresence initial={false}>
@@ -262,9 +284,17 @@ export default function Chat({ companionData, setCompanionData }) {
               {msg.sender === 'ai' && (
                 <img src={companionData.face} alt="" className="message-avatar" />
               )}
-              <div className={`message-bubble ${msg.sender}`}>
+              <div className={`message-bubble ${msg.sender}${msg.pinned ? ' pinned' : ''}`}>
                 {msg.text}
                 <span className="msg-timestamp">{msg.timestamp}</span>
+                {/* Pin button — visible on hover */}
+                <button
+                  className={`pin-btn ${msg.pinned ? 'active' : ''}`}
+                  onClick={() => handlePin(msg.id)}
+                  title={msg.pinned ? 'Unpin message' : 'Pin message'}
+                >
+                  <Bookmark size={12} />
+                </button>
                 {msg.sender === 'ai' && (
                   <div className="msg-reactions">
                     {MESSAGE_REACTIONS.map(emoji => (

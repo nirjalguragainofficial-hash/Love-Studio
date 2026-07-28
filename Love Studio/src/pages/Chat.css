@@ -483,3 +483,82 @@
   color: var(--color-text-muted);
   opacity: 0.65;
 }
+
+/* ── Pin / Bookmark ──────────────────────────────────────── */
+
+/* Pinned strip above chat area */
+.pinned-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 16px 8px;
+  padding: 8px 14px;
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  color: var(--color-primary-dark);
+  overflow: hidden;
+}
+
+.pinned-strip-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pinned-strip-label {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.pinned-strip-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pinned-strip-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* Pinned highlight on bubble */
+.message-bubble.pinned {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Pin toggle button — visible on bubble hover */
+.pin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transition: all 0.15s ease;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.message-bubble:hover .pin-btn {
+  opacity: 1;
+}
+
+.pin-btn.active {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+.pin-btn:hover {
+  color: var(--color-primary-dark);
+  transform: scale(1.2);
+}
