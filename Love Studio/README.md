@@ -15,7 +15,10 @@
 - 🎙️ **Voice Input** — Speak your thoughts using the built-in speech recognition
 - 🔊 **Voice Output** — Hear responses read aloud via text-to-speech
 - 📔 **Journal** — Log your thoughts and feelings privately with a live word count
+- 🔍 **Search** — Full-text and tag-based search for your journal entries
 - 💡 **Mood Modes** — Choose between *Just Listen*, *Distract Me*, and *Cheer Me Up*
+- 📌 **Pin Messages** — Bookmark important messages in chat for quick reference
+- 💬 **Live Session Stats** — See your current message count at a glance
 - 🛡️ **Crisis Detection** — Automatically shows emergency resources when needed
 - 🎨 **Onboarding** — Personalize your companion's name and avatar
 - 😊 **Emoji Quick-Inserts** — Tap a mood emoji to start the conversation easily

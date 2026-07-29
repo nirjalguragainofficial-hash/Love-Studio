@@ -19,6 +19,9 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Request logger** middleware on the server for structured latency logging
 - **Health check** endpoint (`GET /api/health`) returning server status and uptime
 - **Step indicators** ("Step 1 of 2" / "Step 2 of 2") and character counter on the onboarding flow
+- **Journal search** — live full-text filter above the entries list; supports searching by entry text or mood tag, with a match count badge (e.g. `2 / 7`)
+- **Message count badge** — compact pill in the chat header showing how many messages are in the current session
+- **Pin / Bookmark messages** — click the 📌 icon on any bubble to pin it; pinned messages appear in a persistent strip above the chat area for quick reference
 
 ### Fixed
 - Speech recognition `InvalidStateError` caused by starting a session while one was still active; resolved by calling `.abort()` before `.start()`
