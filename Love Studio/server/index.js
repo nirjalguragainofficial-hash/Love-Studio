@@ -7,6 +7,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +18,51 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Serve server directory static files (allowing direct access to server/reply.mp3, etc.)
+app.use(express.static(__dirname));
+
+// Set up multer to save to reference.wav
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, __dirname);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'reference.wav');
+  }
+});
+const upload = multer({ storage });
+
+app.post('/api/voice/upload', upload.single('audio'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No audio file provided' });
+  }
+  res.json({ success: true, message: 'Voice saved successfully as reference.wav' });
+});
+
+// Express proxy for TTS endpoint to ensure audio generated & saved in server/ directory is accessible
+app.post('/api/tts', async (req, res) => {
+  try {
+    const ttsRes = await fetch('http://localhost:8000/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!ttsRes.ok) {
+      const errText = await ttsRes.text();
+      return res.status(ttsRes.status).send(errText);
+    }
+
+    const arrayBuffer = await ttsRes.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    res.set('Content-Type', ttsRes.headers.get('content-type') || 'audio/mpeg');
+    res.send(buffer);
+  } catch (err) {
+    console.error('TTS proxy error:', err);
+    res.status(500).json({ error: 'TTS service unavailable' });
+  }
+});
+
 
 // ── Request Logger ──────────────────────────────────────────────
 app.use((req, _res, next) => {
@@ -81,9 +128,22 @@ app.post('/api/chat', rateLimit, async (req, res) => {
             just_chat:      'The user just wants casual, friendly conversation — keep things light and easy-going.'
         };
 
+        const lastUserMsg = [...messages].reverse().find(m => m.sender === 'user')?.text || '';
+        const isCreatorQuestion = /nirjal|guragain|creator|father|maker|developer|built|created|made|owner|love studio|कसले|कोले|कसको|बनाएको|बनाउने|डेभलपर|निर्माता|सिर्जना/i.test(lastUserMsg);
+
+        if (isCreatorQuestion) {
+            return res.json({
+                reply: "निर्जल गुरागाईँ (Nirjal Guragain) यो Love Studio प्रोजेक्टका सिर्जनाकर्ता र डेभलपर (Software Developer) हुनुहुन्छ। उहाँले नै मलाई र यो सम्पूर्ण Love Studio प्लेटफर्मलाई मानिसहरूलाई भावनात्मक साथ र सहयोग प्रदान गर्न बनाउनुभएको हो।"
+            });
+        }
+
+
         const moodNote = moodContext[userMood] ? ` Context: ${moodContext[userMood]}` : '';
 
-        const systemPrompt = `You are ${companionName || 'a caring companion'}, a warm, emotionally supportive AI friend.${moodNote} ${modeInstructions[mode] || modeInstructions.vent} Keep responses natural and conversational, usually 1-4 sentences unless the user clearly wants to talk more in depth. Never claim to be a licensed therapist. If the user seems in crisis, gently encourage professional help.`;
+        const systemPrompt = `You are ${companionName || 'a caring companion'}, a warm, emotionally supportive AI friend for Love Studio.${moodNote} ${modeInstructions[mode] || modeInstructions.vent} FACT: You and Love Studio were created and developed by Nirjal Guragain. Nirjal Guragain is the software developer and creator of Love Studio. NEVER state that he is a vlogger or anything else. ALWAYS RESPOND IN NEPALI LANGUAGE (Devanagari script).`;
+
+
+
 
         const groqMessages = [
             { role: 'system', content: systemPrompt },

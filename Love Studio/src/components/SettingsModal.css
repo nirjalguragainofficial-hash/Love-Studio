@@ -157,6 +157,11 @@
   border-color: var(--color-primary, #ec4899);
 }
 
+.vibe-pill:hover:not(.active) {
+  background: var(--surface-300, #3f3f46);
+  transform: translateY(-1px);
+}
+
 .settings-footer {
   display: flex;
   align-items: center;

@@ -15,12 +15,14 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
   const [name, setName] = useState(companionData?.name || '');
   const [face, setFace] = useState(companionData?.face || '/avatars/female.png');
   const [voice, setVoice] = useState(companionData?.voice || 'calm');
+  const [voiceGender, setVoiceGender] = useState(companionData?.voiceGender || 'female');
 
   // Track whether the user has made any unsaved changes
   const isDirty =
     name !== (companionData?.name || '') ||
     face !== (companionData?.face || '/avatars/female.png') ||
-    voice !== (companionData?.voice || 'calm');
+    voice !== (companionData?.voice || 'calm') ||
+    voiceGender !== (companionData?.voiceGender || 'female');
 
   const handleClose = () => {
     if (isDirty && !window.confirm('You have unsaved changes. Close anyway?')) return;
@@ -32,14 +34,15 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
       ...companionData,
       name,
       face,
-      voice
+      voice,
+      voiceGender
     });
     onClose();
   };
 
   return (
     <div className="settings-modal-overlay">
-      <motion.div 
+      <motion.div
         className="settings-modal-card"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -58,11 +61,11 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
         <div className="settings-body">
           <div className="setting-field">
             <label>Companion Name</label>
-            <input 
-              type="text" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Name your companion..." 
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name your companion..."
             />
           </div>
 
@@ -78,6 +81,22 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
                 >
                   <img src={avatar.id} alt={avatar.label} />
                   <span>{avatar.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="setting-field">
+            <label>Voice Gender</label>
+            <div className="vibe-pills">
+              {['Female', 'Male'].map((gender) => (
+                <button
+                  key={gender}
+                  type="button"
+                  className={`vibe-pill ${voiceGender.toLowerCase() === gender.toLowerCase() ? 'active' : ''}`}
+                  onClick={() => setVoiceGender(gender.toLowerCase())}
+                >
+                  {gender}
                 </button>
               ))}
             </div>

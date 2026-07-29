@@ -1,0 +1,9 @@
+flask
+flask-cors
+edge-tts
+TTS
+torch
+torchaudio
+soundfile
+numpy
+

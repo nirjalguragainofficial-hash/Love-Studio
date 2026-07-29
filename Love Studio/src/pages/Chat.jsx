@@ -134,31 +134,116 @@ export default function Chat({ companionData, setCompanionData }) {
     return CRISIS_KEYWORDS.some(kw => lower.includes(kw));
   };
 
-  const speakText = (text) => {
-    if (!voiceEnabled || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(utterance);
+  const speakText = async (text) => {
+    if (!voiceEnabled) return;
+
+    let useBrowserTTS = true;
+
+    // Call server TTS endpoint for both female and male voice genders
+    try {
+      let response = await fetch('http://127.0.0.1:8000/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          gender: companionData.voiceGender || 'female'
+        })
+      }).catch(() => null);
+
+      if (!response || !response.ok) {
+        response = await fetch('http://localhost:8000/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text,
+            gender: companionData.voiceGender || 'female'
+          })
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error('TTS server returned an error.');
+      }
+
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      useBrowserTTS = false; // Successfully played server-generated voice!
+    } catch (err) {
+      console.warn('Server TTS failed, falling back to browser TTS:', err);
+    }
+
+
+
+    if (useBrowserTTS) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      const voices = window.speechSynthesis.getVoices();
+      let selectedVoice = null;
+      const nepaliVoices = voices.filter(v => v.lang.startsWith('ne-NP') || v.lang.startsWith('ne'));
+      
+      if (nepaliVoices.length > 0) {
+        if (companionData.voiceGender === 'male') {
+          selectedVoice = nepaliVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('sagar'));
+        } else {
+          selectedVoice = nepaliVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('kalpana'));
+        }
+        if (!selectedVoice) selectedVoice = nepaliVoices[0];
+      } else {
+        const hindiVoices = voices.filter(v => v.lang.startsWith('hi-IN') || v.lang.startsWith('hi'));
+        if (companionData.voiceGender === 'male') {
+          selectedVoice = hindiVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hemant'));
+        } else {
+          selectedVoice = hindiVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('kalpana'));
+        }
+        if (!selectedVoice && hindiVoices.length > 0) selectedVoice = hindiVoices[0];
+      }
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+      
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const getAIResponse = async (allMessages, currentMode) => {
     try {
-      const response = await fetch('http://localhost:3001/api/chat', {
+      const payload = JSON.stringify({
+        messages: allMessages,
+        mode: currentMode,
+        companionName: companionData.name,
+        userMood: companionData.mood
+      });
+
+      let response = await fetch('http://127.0.0.1:3001/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: allMessages,
-          mode: currentMode,
-          companionName: companionData.name,
-          userMood: companionData.mood
-        })
-      });
+        body: payload
+      }).catch(() => null);
+
+      if (!response || !response.ok) {
+        response = await fetch('http://localhost:3001/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        });
+      }
 
       if (!response.ok) throw new Error('Request failed');
 
       const data = await response.json();
       return data.reply;
     } catch (err) {
+
       console.error('AI response error:', err);
       return "Sorry, I'm having trouble connecting right now. Please try again in a moment.";
     }

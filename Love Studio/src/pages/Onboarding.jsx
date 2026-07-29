@@ -12,6 +12,7 @@ export default function Onboarding({ setCompanionData }) {
     gender: 'no_preference',
     face: '/avatars/female.png', // default face
     voice: 'calm',
+    voiceGender: 'female',
     name: ''
   });
 
@@ -40,7 +41,7 @@ export default function Onboarding({ setCompanionData }) {
       <Heart size={48} color="var(--color-primary)" className="step-icon" />
       <h2>Welcome to Love Studio</h2>
       <p className="step-subtitle">A little company, on the days you need it most.</p>
-      
+
       <h3 className="section-title">How are you feeling right now?</h3>
       <div className="mood-grid">
         {[
@@ -59,8 +60,8 @@ export default function Onboarding({ setCompanionData }) {
           </button>
         ))}
       </div>
-      <button 
-        className="btn-primary" 
+      <button
+        className="btn-primary"
         onClick={handleNext}
         disabled={!formData.mood}
         style={{ marginTop: '2rem' }}
@@ -91,7 +92,7 @@ export default function Onboarding({ setCompanionData }) {
             { id: '/avatars/male.png', label: 'Gentle' },
             { id: '/avatars/nonbinary.png', label: 'Cozy' }
           ].map(avatar => (
-            <div 
+            <div
               key={avatar.id}
               className={`avatar-option ${formData.face === avatar.id ? 'selected' : ''}`}
               onClick={() => updateForm('face', avatar.id)}
@@ -99,6 +100,21 @@ export default function Onboarding({ setCompanionData }) {
               <img src={avatar.id} alt={avatar.label} />
               <span>{avatar.label}</span>
             </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="customization-section">
+        <label>Voice Gender</label>
+        <div className="pill-group">
+          {['Female', 'Male'].map(gender => (
+            <button
+              key={gender}
+              className={`pill-btn ${formData.voiceGender === gender.toLowerCase() ? 'selected' : ''}`}
+              onClick={() => updateForm('voiceGender', gender.toLowerCase())}
+            >
+              {gender}
+            </button>
           ))}
         </div>
       </div>
@@ -120,8 +136,8 @@ export default function Onboarding({ setCompanionData }) {
 
       <div className="customization-section">
         <label>What should we call them?</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           className="name-input"
           placeholder="e.g. Sam, Robin, Avery..."
           maxLength={20}
@@ -138,8 +154,8 @@ export default function Onboarding({ setCompanionData }) {
 
       <div className="step-actions">
         <button className="btn-secondary" onClick={handleBack}>Back</button>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleComplete}
           disabled={!formData.name.trim()}
         >
@@ -155,7 +171,7 @@ export default function Onboarding({ setCompanionData }) {
       <div className="onboarding-progress">
         <div className="progress-bar" style={{ width: `${(step / 2) * 100}%` }} />
       </div>
-      
+
       <div className="glass-panel onboarding-card">
         <AnimatePresence mode="wait">
           {step === 1 && renderStep1()}
