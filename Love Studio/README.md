@@ -27,40 +27,41 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- A [Groq API key](https://console.groq.com)
+- **Node.js**: 18+
+- **Python**: 3.9+ (for Voice TTS & Voice Cloning)
+- **Groq API Key**: Get a free key at [console.groq.com](https://console.groq.com)
 
-### Installation
+### Installation & Quick Start
 
-```bash
-npm install
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/nirjalguragainofficial-hash/Love-Studio.git
+   cd Love-Studio
+   ```
 
-### Running the app
+2. **Install Dependencies**:
+   ```bash
+   # Install Node dependencies
+   npm install
 
-Start the backend server:
-```bash
-npm run server
-```
+   # Install Python TTS dependencies
+   pip install flask flask-cors edge-tts
+   ```
 
-Start the frontend dev server:
-```bash
-npm run dev
-```
+3. **Set Up Environment Variables**:
+   Create a file at `server/.env`:
+   ```env
+   GROQ_API_KEY=your_groq_api_key_here
+   ```
 
-Then open [http://localhost:5173](http://localhost:5173) in your browser.
+4. **Launch the Full Application**:
+   ```bash
+   npm start
+   ```
+   *This single command starts the Frontend UI, Express API server, and Python Voice TTS server all together.*
 
-### Environment Variables
-
-Create a `server/.env` file (copy from the provided template):
-```bash
-cp server/.env.example server/.env
-```
-
-Then fill in your key:
-```env
-GROQ_API_KEY=your_key_here
-```
+5. **Open in Browser**:
+   Go to [http://localhost:5173](http://localhost:5173) (or `http://localhost:5174`).
 
 ## ⌨️ Keyboard Shortcuts
 
