@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X, Settings, RotateCcw } from 'lucide-react';
 import './SettingsModal.css';
@@ -23,6 +23,15 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
     face !== (companionData?.face || '/avatars/female.png') ||
     voice !== (companionData?.voice || 'calm') ||
     voiceGender !== (companionData?.voiceGender || 'female');
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isDirty]);
 
   const handleClose = () => {
     if (isDirty && !window.confirm('You have unsaved changes. Close anyway?')) return;
@@ -53,7 +62,7 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
             <Settings size={20} color="var(--color-primary, #ec4899)" />
             <h3>Companion Settings</h3>
           </div>
-          <button className="close-btn" onClick={handleClose}>
+          <button className="close-btn" onClick={handleClose} aria-label="Close settings">
             <X size={20} />
           </button>
         </div>
