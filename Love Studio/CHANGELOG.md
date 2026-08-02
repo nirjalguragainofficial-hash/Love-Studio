@@ -15,6 +15,7 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Emoji reactions** on AI chat messages (❤️ 👍 ✨) — hover a bubble to react
 - **Clear Chat** button in the chat header to start a fresh conversation
 - **Mood tag categories** for journal entries (Good, Low, Anxious, Frustrated, Grateful) — displayed as a badge on saved entries
+- **New mood tags**: `Happy 😄` and `Calm 😌` added to the journal mood selector for a richer emotional palette
 - **In-memory rate limiter** on the API server (10 req / IP / min) with `Retry-After` header
 - **Request logger** middleware on the server for structured latency logging
 - **Health check** endpoint (`GET /api/health`) returning server status and uptime
@@ -22,9 +23,15 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Journal search** — live full-text filter above the entries list; supports searching by entry text or mood tag, with a match count badge (e.g. `2 / 7`)
 - **Message count badge** — compact pill in the chat header showing how many messages are in the current session
 - **Pin / Bookmark messages** — click the 📌 icon on any bubble to pin it; pinned messages appear in a persistent strip above the chat area for quick reference
+- **Escape key** closes the Settings modal (with unsaved-changes guard)
+- **Global `.icon-btn` utility** class, `button:disabled` opacity rule, and `:focus-visible` keyboard ring in `index.css`
 
 ### Fixed
 - Speech recognition `InvalidStateError` caused by starting a session while one was still active; resolved by calling `.abort()` before `.start()`
+
+### Accessibility
+- Added `aria-label` and `title` attributes to all icon-only buttons in Journal and SettingsModal
+- Journal entry delete button now has descriptive `aria-label="Delete this entry"`
 
 ---
 
