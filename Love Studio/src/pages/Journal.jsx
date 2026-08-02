@@ -81,13 +81,14 @@ export default function Journal({ companionData }) {
   return (
     <div className="journal-container">
       <header className="journal-header">
-        <button className="icon-btn" onClick={() => navigate('/chat')}>
+        <button className="icon-btn" onClick={() => navigate('/chat')} aria-label="Back to chat">
           <ArrowLeft size={24} />
         </button>
         <h2>Your Private Space</h2>
         <button
           className="icon-btn"
           title="Export journal as .txt"
+          aria-label="Export journal as text file"
           onClick={handleExport}
           disabled={entries.length === 0}
         >
@@ -182,7 +183,12 @@ export default function Journal({ companionData }) {
                     {entry.mood && (
                       <span className="entry-mood-badge">{entry.mood.emoji} {entry.mood.label}</span>
                     )}
-                    <button className="delete-btn" onClick={() => handleDelete(entry.id)}>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(entry.id)}
+                      aria-label="Delete this entry"
+                      title="Delete entry"
+                    >
                       <Trash2 size={16} />
                     </button>
                   </div>
