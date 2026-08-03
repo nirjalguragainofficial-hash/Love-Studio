@@ -82,11 +82,14 @@
 
 ```
 src/
-  pages/       # Chat, Journal, Onboarding
-  components/  # SettingsModal
+  pages/         # Chat, Journal, Onboarding pages
+  components/    # SettingsModal and shared UI components
+  index.css      # Global design tokens and utility classes
 server/
-  index.js     # Express API server
-  .env.example # Environment variable template
+  index.js       # Express API server (Groq, rate limiter, health check)
+  tts_server.py  # Python Flask TTS server (edge-tts)
+  start_all.js   # Launcher — starts all three servers together
+  .env.example   # Environment variable template
 ```
 
 ## 🔧 Troubleshooting
