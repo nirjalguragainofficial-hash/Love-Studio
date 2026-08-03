@@ -19,10 +19,12 @@
 - 💡 **Mood Modes** — Choose between *Just Listen*, *Distract Me*, and *Cheer Me Up*
 - 📌 **Pin Messages** — Bookmark important messages in chat for quick reference
 - 💬 **Live Session Stats** — See your current message count at a glance
+- ❤️ **Emoji Reactions** — React to AI messages with ❤️ 👍 ✨ by hovering a bubble
 - 🛡️ **Crisis Detection** — Automatically shows emergency resources when needed
 - 🎨 **Onboarding** — Personalize your companion's name and avatar
 - 😊 **Emoji Quick-Inserts** — Tap a mood emoji to start the conversation easily
 - 🌙 **Dark Mode** — Automatic dark theme based on your OS preference
+- 🔒 **Rate Limiting** — Built-in API rate limiter (10 req / IP / min) to prevent abuse
 
 ## 🚀 Getting Started
 
