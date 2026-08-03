@@ -8,7 +8,7 @@ Thank you for your interest in contributing to Love Studio! 💜
 2. Clone your fork: `git clone https://github.com/your-username/Love-Studio.git`
 3. Install dependencies: `npm install`
 4. Copy environment variables: `cp server/.env.example server/.env` and add your Groq API key
-5. Start both servers: `npm run server` and `npm run dev`
+5. Start all servers in one command: `npm start` *(starts the frontend, API server, and TTS server)*
 
 ## Development Guidelines
 
@@ -28,3 +28,8 @@ Thank you for your interest in contributing to Love Studio! 💜
 - Use `const` and arrow functions where possible
 - Keep JSX readable with consistent indentation
 - Add comments for non-obvious logic
+
+## Security
+
+- Never commit API keys or secrets — use `server/.env` (which is gitignored)
+- If you discover a security vulnerability, please open a private issue rather than a public PR
