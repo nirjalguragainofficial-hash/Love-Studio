@@ -35,6 +35,27 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 
 ---
 
+## [0.3.0] — 2026-08-03
+
+### Added
+- **Pin / Bookmark messages** — click the 📌 icon on any bubble to pin it; pinned messages appear in a persistent strip above the chat area
+- **Journal search** — live full-text filter; supports searching by entry text or mood tag, with match count badge
+- **Message count badge** — compact pill in the chat header
+- **Escape key** closes the Settings modal (with unsaved-changes guard)
+- **Happy 😄** and **Calm 😌** mood tags added to the journal mood selector
+- **Global `.icon-btn` utility** class and `:focus-visible` keyboard ring in `index.css`
+- **In-memory rate limiter** on the API server (10 req / IP / min)
+- **Health check** endpoint (`GET /api/health`)
+
+### Fixed
+- Speech recognition `InvalidStateError` when starting a session while one was active
+
+### Accessibility
+- `aria-label` and `title` on all icon-only buttons in Journal and SettingsModal
+
+---
+
+
 ## [0.2.0] — 2026-07-25
 
 ### Added
