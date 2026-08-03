@@ -70,6 +70,7 @@
 | Send message | `Enter` |
 | New line in message | `Shift + Enter` |
 | Toggle mic | Click 🎤 button |
+| Close Settings modal | `Escape` |
 
 ## 🛠️ Tech Stack
 
