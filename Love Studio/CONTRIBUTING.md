@@ -29,6 +29,17 @@ Thank you for your interest in contributing to Love Studio! 💜
 - Keep JSX readable with consistent indentation
 - Add comments for non-obvious logic
 
+## Reporting Bugs
+
+Found a bug? Please open a GitHub issue and include:
+
+- A clear description of the problem
+- Steps to reproduce (step-by-step)
+- Expected vs. actual behaviour
+- Your browser and OS version
+
+> **Tip:** Screenshots or console error logs are always helpful!
+
 ## Security
 
 - Never commit API keys or secrets — use `server/.env` (which is gitignored)
