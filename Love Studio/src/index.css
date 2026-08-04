@@ -28,6 +28,9 @@
   --shadow-sm: 0 2px 8px rgba(181, 131, 141, 0.08);
   --shadow-md: 0 4px 16px rgba(181, 131, 141, 0.12);
   --shadow-lg: 0 8px 32px rgba(181, 131, 141, 0.16);
+
+  /* Default transition used across interactive elements */
+  --transition-default: all 0.2s ease;
 }
 
 /* Dark mode — automatically applied when the OS is in dark mode */
