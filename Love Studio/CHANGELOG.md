@@ -25,6 +25,7 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Pin / Bookmark messages** — click the 📌 icon on any bubble to pin it; pinned messages appear in a persistent strip above the chat area for quick reference
 - **Escape key** closes the Settings modal (with unsaved-changes guard)
 - **Global `.icon-btn` utility** class, `button:disabled` opacity rule, and `:focus-visible` keyboard ring in `index.css`
+- **`--transition-default` CSS variable** added to design tokens for consistent animation timing across components
 
 ### Fixed
 - Speech recognition `InvalidStateError` caused by starting a session while one was still active; resolved by calling `.abort()` before `.start()`
