@@ -94,6 +94,17 @@ server/
   .env.example   # Environment variable template
 ```
 
+## 🌐 Browser Support
+
+| Browser | Chat | Voice Input | Voice Output |
+|---------|------|-------------|--------------|
+| Chrome 90+ | ✅ | ✅ | ✅ |
+| Edge 90+ | ✅ | ✅ | ✅ |
+| Firefox 90+ | ✅ | ❌ | ✅ |
+| Safari 15+ | ✅ | ⚠️ Partial | ✅ |
+
+> **Note:** Voice input (speech recognition) requires a Chromium-based browser. All other features work in modern Firefox and Safari.
+
 ## 🔧 Troubleshooting
 
 **Voice input not working?**
