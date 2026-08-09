@@ -40,7 +40,7 @@ app.post('/api/voice/upload', upload.single('audio'), (req, res) => {
 });
 
 // Express proxy for TTS endpoint to ensure audio generated & saved in server/ directory is accessible
-app.post('/api/tts', async (req, res) => {
+app.post(['/tts', '/api/tts'], async (req, res) => {
   try {
     const ttsRes = await fetch('http://localhost:8000/tts', {
       method: 'POST',
@@ -74,13 +74,13 @@ app.use((req, _res, next) => {
     next();
 });
 
-// ── Simple In-Memory Rate Limiter (10 req / IP / min) ───────────
+// ── Simple In-Memory Rate Limiter (200 req / IP / min) ───────────
 const rateLimitMap = new Map();
-const RATE_LIMIT = 10;
+const RATE_LIMIT = 200;
 const WINDOW_MS = 60_000;
 
 function rateLimit(req, res, next) {
-    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const ip = req.headers['x-forwarded-for'] || req.ip || req.socket?.remoteAddress || 'unknown';
     const now = Date.now();
     const record = rateLimitMap.get(ip) || { count: 0, resetAt: now + WINDOW_MS };
 
@@ -185,6 +185,16 @@ app.post('/api/chat', rateLimit, async (req, res) => {
 // Health check endpoint
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+// Serve frontend static build files
+const distPath = path.join(__dirname, '..', 'dist');
+app.use(express.static(distPath));
+
+// SPA catch-all fallback (serve index.html for all non-API routes)
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/tts')) return next();
+    res.sendFile(path.join(distPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
