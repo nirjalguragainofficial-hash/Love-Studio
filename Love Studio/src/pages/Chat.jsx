@@ -141,25 +141,14 @@ export default function Chat({ companionData, setCompanionData }) {
 
     // Call server TTS endpoint for both female and male voice genders
     try {
-      let response = await fetch('http://127.0.0.1:8000/tts', {
+      let response = await fetch('/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text,
           gender: companionData.voiceGender || 'female'
         })
-      }).catch(() => null);
-
-      if (!response || !response.ok) {
-        response = await fetch('http://localhost:8000/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text,
-            gender: companionData.voiceGender || 'female'
-          })
-        });
-      }
+      });
 
       if (!response.ok) {
         throw new Error('TTS server returned an error.');
@@ -224,19 +213,11 @@ export default function Chat({ companionData, setCompanionData }) {
         userMood: companionData.mood
       });
 
-      let response = await fetch('http://127.0.0.1:3001/api/chat', {
+      let response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload
-      }).catch(() => null);
-
-      if (!response || !response.ok) {
-        response = await fetch('http://localhost:3001/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: payload
-        });
-      }
+      });
 
       if (!response.ok) throw new Error('Request failed');
 
