@@ -12,8 +12,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "server": "node server/index.js"
-
+    "server": "node server/index.js",
+    "tunnel": "ssh -o StrictHostKeyChecking=no -R 80:localhost:3001 serveo.net"
   },
   "dependencies": {
     "framer-motion": "^12.42.2",
