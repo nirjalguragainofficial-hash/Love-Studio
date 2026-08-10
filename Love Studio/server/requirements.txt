@@ -1,9 +1,8 @@
-flask
-flask-cors
-edge-tts
-TTS
-torch
-torchaudio
-soundfile
-numpy
-
+flask>=3.0.0
+flask-cors>=4.0.0
+edge-tts>=6.1.9
+TTS>=0.22.0
+torch>=2.2.0
+torchaudio>=2.2.0
+soundfile>=0.12.1
+numpy>=1.26.0
