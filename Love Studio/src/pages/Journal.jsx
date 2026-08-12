@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, BookHeart, Trash2, Tag, Download, Search } from 'lucide-react';
+import { ArrowLeft, Plus, BookHeart, Trash2, Tag, Download, Search, X } from 'lucide-react';
 import './Journal.css';
 
 // Mood tags available for each journal entry
@@ -25,6 +25,8 @@ export default function Journal({ companionData }) {
   const [currentEntry, setCurrentEntry] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const clearSearch = useCallback(() => setSearchQuery(''), []);
 
   useEffect(() => {
     localStorage.setItem('loveStudio_journal', JSON.stringify(entries));
@@ -159,11 +161,22 @@ export default function Journal({ companionData }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="journal-search-input"
+              aria-label="Search journal entries"
             />
             {searchQuery && (
-              <span className="journal-search-count">
-                {filteredEntries.length} / {entries.length}
-              </span>
+              <>
+                <span className="journal-search-count">
+                  {filteredEntries.length} / {entries.length}
+                </span>
+                <button
+                  className="journal-search-clear"
+                  onClick={clearSearch}
+                  aria-label="Clear search"
+                  title="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              </>
             )}
           </div>
         )}
