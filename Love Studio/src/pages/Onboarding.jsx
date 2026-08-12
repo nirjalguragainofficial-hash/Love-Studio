@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, Smile, CloudRain, Sun } from 'lucide-react';
@@ -6,7 +6,11 @@ import './Onboarding.css';
 
 export default function Onboarding({ setCompanionData }) {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  // Restore step from sessionStorage so a page refresh doesn't lose progress
+  const [step, setStep] = useState(() => {
+    const saved = sessionStorage.getItem('onboarding_step');
+    return saved ? parseInt(saved, 10) : 1;
+  });
   const [formData, setFormData] = useState({
     mood: '',
     gender: 'no_preference',
@@ -20,11 +24,17 @@ export default function Onboarding({ setCompanionData }) {
     setFormData(prev => ({ ...prev, [key]: value }));
   };
 
+  // Keep sessionStorage in sync whenever the step changes
+  useEffect(() => {
+    sessionStorage.setItem('onboarding_step', String(step));
+  }, [step]);
+
   const handleNext = () => setStep(s => s + 1);
   const handleBack = () => setStep(s => s - 1);
 
   const handleComplete = () => {
     if (!formData.name.trim()) return;
+    sessionStorage.removeItem('onboarding_step'); // clean up on completion
     setCompanionData(formData);
     navigate('/chat');
   };
