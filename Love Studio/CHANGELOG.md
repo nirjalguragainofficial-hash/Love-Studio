@@ -26,13 +26,24 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Escape key** closes the Settings modal (with unsaved-changes guard)
 - **Global `.icon-btn` utility** class, `button:disabled` opacity rule, and `:focus-visible` keyboard ring in `index.css`
 - **`--transition-default` CSS variable** added to design tokens for consistent animation timing across components
+- **`.sr-only` utility class** for screen-reader-accessible hidden labels
+- **`prefers-reduced-motion` media query** — disables all CSS transitions and animations for users who opt out of motion
+- **Clear search (✕) button** in the journal search bar for one-click query reset, with `aria-label` for screen readers
+- **Onboarding step persistence** — active step is saved to `sessionStorage` so a page refresh no longer resets the flow back to step 1
 
 ### Fixed
 - Speech recognition `InvalidStateError` caused by starting a session while one was still active; resolved by calling `.abort()` before `.start()`
+- Onboarding step lost on page refresh (now persisted in `sessionStorage`)
+
+### Changed
+- `server/start_all.js` refactored to use a `startProcess()` helper with per-process error and exit-code logging
+- Python dependencies in `server/requirements.txt` pinned to minimum compatible versions for reproducible installs
+- `CONTRIBUTING.md` expanded with project structure map, commit message convention table, and PR checklist
 
 ### Accessibility
 - Added `aria-label` and `title` attributes to all icon-only buttons in Journal and SettingsModal
 - Journal entry delete button now has descriptive `aria-label="Delete this entry"`
+- Journal search input now has `aria-label="Search journal entries"`
 
 ---
 
