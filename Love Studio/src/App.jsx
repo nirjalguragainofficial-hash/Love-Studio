@@ -14,6 +14,8 @@ function App() {
   useEffect(() => {
     if (companionData) {
       localStorage.setItem('loveStudio_companion', JSON.stringify(companionData));
+    } else {
+      localStorage.removeItem('loveStudio_companion');
     }
   }, [companionData]);
 
@@ -40,6 +42,11 @@ function App() {
           <Route 
             path="/" 
             element={<Navigate to={companionData ? "/chat" : "/onboarding"} />} 
+          />
+          {/* Catch-all 404 route */}
+          <Route 
+            path="*" 
+            element={<Navigate to="/" replace />} 
           />
         </Routes>
       </div>
