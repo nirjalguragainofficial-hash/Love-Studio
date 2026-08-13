@@ -121,6 +121,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  scroll-snap-type: y proximity;
 }
 
 .message-wrapper {
@@ -128,6 +129,7 @@
   align-items: flex-end;
   gap: 12px;
   max-width: 80%;
+  scroll-snap-align: end;
 }
 
 .message-wrapper.user {
@@ -561,4 +563,27 @@
 .pin-btn:hover {
   color: var(--color-primary-dark);
   transform: scale(1.2);
+}
+
+/* ── Print Styles ──────────────────────────────────────── */
+@media print {
+  .chat-header, .input-area, .pinned-strip, .input-hint-bar, .mode-selector {
+    display: none !important;
+  }
+  
+  .chat-container {
+    height: auto;
+    overflow: visible;
+  }
+
+  .messages-area {
+    overflow: visible;
+    padding: 0;
+  }
+
+  .message-bubble {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
 }
