@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, Settings, RotateCcw } from 'lucide-react';
 import './SettingsModal.css';
@@ -16,6 +16,7 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
   const [face, setFace] = useState(companionData?.face || '/avatars/female.png');
   const [voice, setVoice] = useState(companionData?.voice || 'calm');
   const [voiceGender, setVoiceGender] = useState(companionData?.voiceGender || 'female');
+  const modalRef = useRef(null);
 
   // Track whether the user has made any unsaved changes
   const isDirty =
@@ -24,10 +25,26 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
     voice !== (companionData?.voice || 'calm') ||
     voiceGender !== (companionData?.voiceGender || 'female');
 
-  // Close modal on Escape key
+  // Close modal on Escape key + trap focus inside modal
   useEffect(() => {
+    // Focus the modal so keyboard users can immediately interact
+    modalRef.current?.focus();
+
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') handleClose();
+      if (e.key === 'Escape') { handleClose(); return; }
+      // Trap Tab / Shift+Tab inside the modal
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -50,17 +67,19 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
   };
 
   return (
-    <div className="settings-modal-overlay">
+    <div className="settings-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
       <motion.div
         className="settings-modal-card"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
+        ref={modalRef}
+        tabIndex={-1}
       >
         <div className="settings-header">
           <div className="settings-header-title">
             <Settings size={20} color="var(--color-primary, #ec4899)" />
-            <h3>Companion Settings</h3>
+            <h3 id="settings-modal-title">Companion Settings</h3>
           </div>
           <button className="close-btn" onClick={handleClose} aria-label="Close settings">
             <X size={20} />
@@ -133,7 +152,7 @@ export default function SettingsModal({ companionData, onSave, onReset, onClose 
             <RotateCcw size={16} /> Reset Companion
           </button>
           <button className="save-btn" onClick={handleSave} disabled={!name.trim()}>
-            Save Changes
+            Save Changes{isDirty && <span className="unsaved-dot" aria-label="Unsaved changes" />}
           </button>
         </div>
       </motion.div>
