@@ -19,6 +19,7 @@
 - 💡 **Mood Modes** — Choose between *Just Listen*, *Distract Me*, and *Cheer Me Up*
 - 📌 **Pin Messages** — Bookmark important messages in chat for quick reference
 - 💬 **Live Session Stats** — See your current message count at a glance
+- 📱 **Responsive Design** — Optimized for both desktop and mobile screens
 - ❤️ **Emoji Reactions** — React to AI messages with ❤️ 👍 ✨ by hovering a bubble
 - 🛡️ **Crisis Detection** — Automatically shows emergency resources when needed
 - 🎨 **Onboarding** — Personalize your companion's name and avatar
