@@ -29,7 +29,7 @@ const INITIAL_MESSAGES = [
 const CRISIS_KEYWORDS = [
   'suicide', 'kill myself', 'die', 'hurt myself', 'cut myself', 'end it all',
   'want to die', 'no reason to live', 'end my life', 'not worth living',
-  'self harm', 'overdose', 'give up on life'
+  'self harm', 'self-harm', 'overdose', 'give up on life'
 ];
 
 // Reactions available on AI messages
