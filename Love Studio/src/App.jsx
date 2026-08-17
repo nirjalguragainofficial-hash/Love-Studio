@@ -11,6 +11,7 @@ function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
+  // Synchronize companion data to local storage on changes
   useEffect(() => {
     if (companionData) {
       localStorage.setItem('loveStudio_companion', JSON.stringify(companionData));
