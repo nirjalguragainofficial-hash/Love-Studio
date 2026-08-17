@@ -88,7 +88,7 @@ export default function Journal({ companionData }) {
         <button className="icon-btn" onClick={() => navigate('/chat')} aria-label="Back to chat">
           <ArrowLeft size={24} />
         </button>
-        <h2>Your Private Space</h2>
+        <h2>Your Private Space 📔</h2>
         <button
           className="icon-btn"
           title="Export journal as .txt"
