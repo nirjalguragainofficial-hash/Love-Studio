@@ -50,7 +50,7 @@ export default function Onboarding({ setCompanionData }) {
       <p className="step-indicator">Step 1 of 2</p>
       <Heart size={48} color="var(--color-primary)" className="step-icon" />
       <h2>Welcome to Love Studio</h2>
-      <p className="step-subtitle">A little company, on the days you need it most.</p>
+      <p className="step-subtitle">A little companionship for the days you need it most.</p>
 
       <h3 className="section-title">How are you feeling right now?</h3>
       <div className="mood-grid">
