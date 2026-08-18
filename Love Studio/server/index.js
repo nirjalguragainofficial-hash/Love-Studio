@@ -21,7 +21,7 @@ app.use(express.json());
 // Serve server directory static files (allowing direct access to server/reply.mp3, etc.)
 app.use(express.static(__dirname));
 
-// Set up multer to save to reference.wav
+// Set up multer to save to reference.wav for TTS processing
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, __dirname);
