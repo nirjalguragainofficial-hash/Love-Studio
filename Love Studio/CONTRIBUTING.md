@@ -33,7 +33,7 @@ Love Studio/
 - Keep components small and focused
 - Use the existing CSS variable system for colors (`var(--color-primary)`, etc.)
 - Do not commit your `server/.env` file — it's gitignored for security
-- Test your changes across Chrome and Firefox
+- Test your changes across Chrome, Firefox, and Safari
 
 ## Commit Message Convention
 
