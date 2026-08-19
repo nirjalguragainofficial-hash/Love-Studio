@@ -126,3 +126,6 @@ server/
 ## 📄 License
 
 MIT
+
+---
+*Built with ❤️ for mental wellness.*
