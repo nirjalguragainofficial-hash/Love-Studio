@@ -14,6 +14,7 @@
     "dev:all": "node server/start_all.js",
     "build": "vite build",
     "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "preview": "vite preview",
     "server": "node server/index.js",
     "tunnel": "ssh -o StrictHostKeyChecking=no -R 80:localhost:3001 serveo.net"
