@@ -95,6 +95,14 @@ server/
   .env.example   # Environment variable template
 ```
 
+## 🎨 Code Style
+
+To maintain a consistent codebase, this project uses:
+- **EditorConfig**: Ensures consistent indentation and line endings across different editors. (See `.editorconfig`)
+- **Prettier**: Code formatting for JavaScript, CSS, and Markdown. (See `.prettierrc`)
+
+Make sure your editor has the corresponding plugins installed to automatically format your code on save!
+
 ## 🌐 Browser Support
 
 | Browser | Chat | Voice Input | Voice Output |
