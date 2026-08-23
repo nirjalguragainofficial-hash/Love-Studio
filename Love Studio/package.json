@@ -4,6 +4,15 @@
   "author": "Nirjal Guragain",
   "private": true,
   "version": "0.3.0",
+  "keywords": [
+    "ai",
+    "companion",
+    "journaling",
+    "mental-health",
+    "voice-tts",
+    "react",
+    "groq"
+  ],
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
