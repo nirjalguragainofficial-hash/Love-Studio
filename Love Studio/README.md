@@ -131,6 +131,11 @@ Make sure your editor has the corresponding plugins installed to automatically f
 - Make sure Python and the TTS dependencies are installed: `pip install flask flask-cors edge-tts`
 - The Python TTS server runs on port `5000`. Check it is running with `npm start` (which starts all servers together).
 
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!
+Feel free to check out our [Contributing Guide](CONTRIBUTING.md).
+
 ## 📄 License
 
 MIT
