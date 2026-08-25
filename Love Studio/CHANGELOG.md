@@ -16,6 +16,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) an
 - **Clear Chat** button in the chat header to start a fresh conversation
 - **Mood tag categories** for journal entries (Good, Low, Anxious, Frustrated, Grateful) — displayed as a badge on saved entries
 - **New mood tags**: `Happy 😄` and `Calm 😌` added to the journal mood selector for a richer emotional palette
+- **New mood tags**: `Loved ❤️` and `Sad 😢` added to the journal mood selector to better cover common emotional states
+- **New personality vibe**: `Empathetic` added to the companion vibe options in Settings
 - **In-memory rate limiter** on the API server (10 req / IP / min) with `Retry-After` header
 - **Request logger** middleware on the server for structured latency logging
 - **Health check** endpoint (`GET /api/health`) returning server status and uptime
