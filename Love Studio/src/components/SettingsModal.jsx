@@ -9,7 +9,7 @@ const AVATAR_OPTIONS = [
   { id: '/avatars/nonbinary.png', label: 'Cozy' }
 ];
 
-const VIBE_OPTIONS = ['Calm', 'Cheerful', 'Witty', 'Gentle', 'Direct'];
+const VIBE_OPTIONS = ['Calm', 'Cheerful', 'Witty', 'Gentle', 'Direct', 'Empathetic'];
 
 export default function SettingsModal({ companionData, onSave, onReset, onClose }) {
   const [name, setName] = useState(companionData?.name || '');
