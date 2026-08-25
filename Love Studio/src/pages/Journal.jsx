@@ -9,6 +9,8 @@ const MOOD_TAGS = [
   { id: 'good', emoji: '😊', label: 'Good' },
   { id: 'happy', emoji: '😄', label: 'Happy' },
   { id: 'calm', emoji: '😌', label: 'Calm' },
+  { id: 'loved', emoji: '❤️', label: 'Loved' },
+  { id: 'sad', emoji: '😢', label: 'Sad' },
   { id: 'low', emoji: '😔', label: 'Low' },
   { id: 'anxious', emoji: '😰', label: 'Anxious' },
   { id: 'frustrated', emoji: '😤', label: 'Frustrated' },
