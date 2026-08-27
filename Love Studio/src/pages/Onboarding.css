@@ -162,6 +162,11 @@
   color: #fff;
 }
 
+.pill-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .name-input {
   width: 100%;
   padding: 16px;
@@ -233,5 +238,36 @@
   }
   .onboarding-card {
     padding: 24px;
+  }
+}
+
+/* Extra-small screens: 2-column avatar grid, tighter padding */
+@media (max-width: 480px) {
+  .onboarding-card {
+    padding: 20px 16px;
+    min-height: unset;
+  }
+
+  .onboarding-step h2 {
+    font-size: 1.6rem;
+  }
+
+  /* Collapse 3-column avatar grid to 2 columns on very small viewports */
+  .avatar-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .pill-group {
+    gap: 8px;
+  }
+
+  .step-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .step-actions button {
+    width: 100%;
   }
 }
