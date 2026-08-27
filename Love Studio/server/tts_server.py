@@ -2,6 +2,7 @@ import os
 import sys
 import traceback
 import asyncio
+import platform
 
 # Force UTF-8 stdout/stderr encoding on Windows to prevent charmap print errors with Devanagari text
 sys.stdout.reconfigure(encoding='utf-8')
@@ -94,14 +95,53 @@ def tts_endpoint():
         traceback.print_exc()
         return {"error": str(e)}, 500
 
+# Built-in Edge-TTS neural voices available in Love Studio
+VOICES = [
+    {"name": "ne-NP-HemkalaNeural", "language": "Nepali", "gender": "female", "default": True},
+    {"name": "ne-NP-SagarNeural",   "language": "Nepali", "gender": "male",   "default": True},
+    {"name": "en-US-JennyNeural",   "language": "English (US)", "gender": "female", "default": False},
+    {"name": "en-US-GuyNeural",     "language": "English (US)", "gender": "male",   "default": False},
+    {"name": "en-GB-SoniaNeural",   "language": "English (UK)", "gender": "female", "default": False},
+    {"name": "en-AU-NatashaNeural", "language": "English (AU)", "gender": "female", "default": False},
+    {"name": "en-IN-NeerjaNeural",  "language": "English (IN)", "gender": "female", "default": False},
+    {"name": "hi-IN-SwaraNeural",   "language": "Hindi",        "gender": "female", "default": False},
+]
+
+
+@app.route('/voices', methods=['GET'])
+def list_voices():
+    """Return the list of built-in Edge-TTS voices supported by this server."""
+    return {"voices": VOICES, "count": len(VOICES)}
+
+
 @app.route('/health', methods=['GET'])
 def health_check():
-    reply_exists = os.path.exists(os.path.join(SERVER_DIR, 'reply.mp3')) or os.path.exists(os.path.join(SERVER_DIR, 'reply.wav'))
+    """Return a diagnostic snapshot of the TTS server's current state."""
+    ref_wav   = os.path.join(SERVER_DIR, 'reference.wav')
+    reply_mp3 = os.path.join(SERVER_DIR, 'reply.mp3')
+    reply_wav = os.path.join(SERVER_DIR, 'reply.wav')
+
+    has_reference = os.path.exists(ref_wav)
+    has_saved_reply = os.path.exists(reply_mp3) or os.path.exists(reply_wav)
+
+    # Determine which TTS engine will be used for the next request
+    if has_reference and xtts_model is not None:
+        engine = "coqui-xtts-v2 (voice cloning)"
+    elif has_reference and tts_import_error is None and xtts_model is None:
+        engine = "coqui-xtts-v2 (not yet loaded)"
+    else:
+        engine = "edge-tts (fast neural)"
+
     return {
         "status": "ok",
+        "engine": engine,
         "server_dir": SERVER_DIR,
-        "has_reference_wav": os.path.exists(os.path.join(SERVER_DIR, 'reference.wav')),
-        "has_saved_reply": reply_exists
+        "python_version": platform.python_version(),
+        "has_reference_wav": has_reference,
+        "has_saved_reply": has_saved_reply,
+        "voice_cloning_ready": has_reference and xtts_model is not None,
+        "coqui_error": tts_import_error,
+        "available_voices": len(VOICES),
     }
 
 if __name__ == '__main__':
