@@ -38,3 +38,6 @@ A: Not yet — this is planned for a future release. In the meantime you can man
 
 **Q: How do I change my companion's name or personality after onboarding?**
 A: Click the **⚙️ Settings** icon in the chat header. From there you can update the companion's name, avatar, vibe, and voice without losing your chat history.
+
+**Q: Can I backup my Love Studio data?**
+A: Currently, you can manually backup your data by exporting the `loveStudio_*` keys from your browser's Local Storage. A more robust backup feature is planned for the future.
