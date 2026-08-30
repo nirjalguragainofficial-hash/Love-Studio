@@ -30,7 +30,7 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Node.js**: 18+
+- **Node.js**: 18+ LTS
 - **Python**: 3.9+ (for Voice TTS & Voice Cloning)
 - **Groq API Key**: Get a free key at [console.groq.com](https://console.groq.com)
 
