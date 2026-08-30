@@ -8,7 +8,7 @@ Get Love Studio running locally in five minutes.
 
 | Tool | Minimum version | Check |
 |------|----------------|-------|
-| Node.js | 18 LTS | `node -v` |
+| Node.js | 18+ LTS | `node -v` |
 | npm | 9 | `npm -v` |
 | Python | 3.9 | `python --version` |
 | Git | any | `git --version` |
